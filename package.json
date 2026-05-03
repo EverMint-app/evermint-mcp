@@ -1,0 +1,50 @@
+{
+  "name": "evermint-mcp",
+  "version": "1.0.0",
+  "description": "MCP server for EverMint — tamper-evident proof layer for AI agents",
+  "type": "module",
+  "main": "./dist/server.js",
+  "bin": {
+    "evermint-mcp": "./dist/server.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc && chmod +x dist/server.js",
+    "prepublishOnly": "npm run build",
+    "start": "node dist/server.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "@types/node": "^20.0.0"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "ai-agents",
+    "audit-trail",
+    "evermint",
+    "claude",
+    "anthropic",
+    "compliance"
+  ],
+  "homepage": "https://evermint.app",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/EverMint-app/evermint-mcp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/EverMint-app/evermint-mcp/issues"
+  },
+  "author": "EverMint",
+  "license": "MIT"
+}
