@@ -58,7 +58,7 @@ Verify an existing EverMint record by Record ID. Public, no API key required.
 
 ## Pricing
 
-- **Free** — 500 mints/month
+- **Free** — 500 mints
 - **Pro** — $49/month, 50,000 mints + MCP access
 - **Top-ups** — From $0.001/mint
 
