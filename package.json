@@ -1,11 +1,11 @@
 {
   "name": "evermint-mcp",
-  "version": "1.0.0",
+  "version": "1.0.5",
   "description": "MCP server for EverMint — tamper-evident proof layer for AI agents",
   "type": "module",
   "main": "./dist/server.js",
   "bin": {
-    "evermint-mcp": "./dist/server.js"
+    "evermint-mcp": "dist/server.js"
   },
   "files": [
     "dist",
