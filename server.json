@@ -1,0 +1,29 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.evermint-app/evermint-mcp",
+  "description": "Mint tamper-evident receipts for AI agent actions. The notary layer for agent-to-agent transactions.",
+  "repository": {
+    "url": "https://github.com/EverMint-app/evermint-mcp",
+    "source": "github"
+  },
+  "version": "1.1.2",
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "evermint-mcp",
+      "version": "1.1.2",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+            "description": "Your EverMint API key (starts with EVR-sk_). Get one at https://evermint.app/api-keys",
+                      "isRequired": true,
+                      "format": "string",
+                      "isSecret": true,
+                      "name": "EVERMINT_API_KEY"
+        }
+      ]
+    }
+  ]
+}

@@ -1,19 +1,24 @@
-# evermint-mcp
+# EverMint MCP Server
 
-MCP server for [EverMint](https://evermint.app) — the notary layer for AI agents.
+Tamper-evident proof of agent actions, callable as a native MCP tool.
 
-When your agent acts, EverMint mints a tamper-evident, cryptographically timestamped record. This package exposes EverMint's mint and verify capabilities as native MCP tools, callable by Claude Desktop and any MCP-compatible AI agent.
+## What it does
 
-## Quick start
+Exposes five tools to any MCP-compatible agent:
 
-Get an API key at [evermint.app/api-keys](https://evermint.app/api-keys). Free tier includes 500 mints/month.
+| Tool | Auth | Purpose |
+|------|------|---------|
+| `evermint_mint` | API key | Mint a tamper-evident record of an agent action |
+| `evermint_verify` | Public | Verify a single record by Record ID |
+| `evermint_list_records` | API key | List records for the authenticated org, with filters |
+| `evermint_get_record` | API key | Fetch a single record including its original payload |
+| `evermint_verify_chain` | Public | Verify the integrity of a sequence of chained records |
 
-## Use with Claude Desktop
+## Setup
 
-Add to your `claude_desktop_config.json`:
+1. Get an API key at evermint.app/api-keys
 
-- **macOS:** `~/Library/Application Support/Claude/claude_desktop_config.json`
-- **Windows:** `%APPDATA%\Claude\claude_desktop_config.json`
+2. Add to your Claude desktop config (`~/.claude/claude_desktop_config.json`):
 
 ```json
 {
@@ -29,51 +34,87 @@ Add to your `claude_desktop_config.json`:
 }
 ```
 
-Restart Claude Desktop. The `evermint_mint` and `evermint_verify` tools will be available.
+3. Restart Claude. The tools appear automatically.
 
 ## Tools
 
-### `evermint_mint`
+### `evermint_mint` (API key required)
 
-Mint a tamper-evident record of an agent action, decision, or observation.
+Mint a tamper-evident, cryptographically timestamped record of an action.
 
-**Parameters:**
+```js
+evermint_mint({
+  agent_id: "billing-agent-1",
+  action_type: "decision_made",
+  payload: { decision: "approved", confidence: 0.97 }
+})
+```
 
-- `action_type` *(required)* — Short label for the action (e.g. `transaction_approved`, `decision_made`, `data_accessed`)
-- `agent_id` — Identifier for the agent or system
-- `payload` — Any JSON object capturing the state, decision, or context
-- `timestamp` — ISO 8601 datetime, or `auto` (default)
+### `evermint_verify` (public)
 
-**Returns:** Record ID, SHA-256 hash, timestamp, chain link, and remaining credits.
+Verify a single record by Record ID.
 
-### `evermint_verify`
+```js
+evermint_verify({ record_id: "EVR-12C5N1A2" })
+```
 
-Verify an existing EverMint record by Record ID. Public, no API key required.
+### `evermint_list_records` (API key required)
 
-**Parameters:**
+List records for the authenticated org with optional filters. Returns metadata only (no payloads).
 
-- `record_id` *(required)* — The EverMint Record ID to verify (format: `EVR-XXXXXXXX`)
+```js
+evermint_list_records({
+  agent_id: "billing-agent-1",
+  action_type: "decision_made",
+  since: "2026-01-01T00:00:00Z",
+  until: "2026-05-01T00:00:00Z",
+  limit: 50
+})
+```
 
-**Returns:** Confirmation of integrity plus record metadata.
+All filters are optional. `limit` defaults to 50 (max 200).
 
-## Pricing
+### `evermint_get_record` (API key required)
 
-- **Free** — 500 mints
-- **Pro** — $49/month, 50,000 mints + MCP access
-- **Top-ups** — From $0.001/mint
+Fetch the full contents of a single record, including its original payload. Returns `403` if the record exists but belongs to a different organization.
 
-See [evermint.app/developers](https://evermint.app/developers) for details.
+```js
+evermint_get_record({ record_id: "EVR-12C5N1A2" })
+```
+
+### `evermint_verify_chain` (public)
+
+Verify a sequence of hash-chained records. Confirms each hash matches its content, and each `chain_link` correctly references the prior record.
+
+```js
+// Explicit list, oldest first
+evermint_verify_chain({
+  record_ids: ["EVR-AAAAAAAA", "EVR-BBBBBBBB", "EVR-CCCCCCCC"]
+})
+
+// Or walk forward from a starting point
+evermint_verify_chain({
+  start_record_id: "EVR-AAAAAAAA",
+  length: 10
+})
+```
+
+Returns per-record `hash_valid`, `chain_link_valid`, plus an overall `chain_intact: true|false`.
 
 ## Verify any record
 
-Every record minted through this MCP can be publicly verified at [evermint.app/verify](https://evermint.app/verify) — no account required.
+```
+evermint.app/verify?id=EVR-XXXXXXXX
+```
 
-## Links
+## Publishing
 
-- Site: [evermint.app](https://evermint.app)
-- Docs: [evermint.app/docs](https://evermint.app/docs)
-- Developers: [evermint.app/developers](https://evermint.app/developers)
+To publish to npm as `evermint-mcp`:
 
-## License
+- `package.json` name: `"evermint-mcp"`
+- `bin` entry: `{ "evermint-mcp": "./dist/server.js" }`
+- Add to Anthropic MCP registry at modelcontextprotocol.io/registry
 
-MIT
+## Contact
+
+info@evermint.app
