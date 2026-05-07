@@ -1,22 +1,31 @@
-# EverMint MCP Server
+# evermint-mcp
 
-Tamper-evident proof of agent actions, callable as a native MCP tool.
+Tamper-evident receipts for AI agent actions. The notary layer for agent-to-agent transactions.
 
-## What it does
+## Install
 
-Exposes five tools to any MCP-compatible agent:
+```bash
+npm install -g evermint-mcp
+```
 
-| Tool | Auth | Purpose |
-|------|------|---------|
-| `evermint_mint` | API key | Mint a tamper-evident record of an agent action |
-| `evermint_verify` | Public | Verify a single record by Record ID |
-| `evermint_list_records` | API key | List records for the authenticated org, with filters |
-| `evermint_get_record` | API key | Fetch a single record including its original payload |
-| `evermint_verify_chain` | Public | Verify the integrity of a sequence of chained records |
+## Claude Desktop config
 
-## Setup
+Add to your `claude_desktop_config.json`:
 
-1. Get an API key at evermint.app/api-keys
+```json
+{
+  "mcpServers": {
+    "evermint": {
+      "command": "evermint-mcp",
+      "env": {
+        "EVERMINT_API_KEY": "EVR-sk_your_key_here"
+      }
+    }
+  }
+}
+```
+
+Get an API key at https://evermint.app/api-keys
 
 2. Add to your Claude desktop config (`~/.claude/claude_desktop_config.json`):
 
